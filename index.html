@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 
+
 <html lang="ja">
     
     <head>
@@ -25,9 +26,12 @@
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72.png">
         <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57.png">
         <link rel="shortcut icon" href="images/ico/favicon.ico">
+
+        <script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc1.min.js"></script>
+        <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.21.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     </head>
-    
-    <body>
+
         <div class="navbar">
                 <div class="container">
                     <a href="#" class="brand">
@@ -36,8 +40,83 @@
                     </a>
                 </div>
         </div>
-        <!-- Portfolio section start -->
-        <div class="section secondary-section " >
+
+
+    <script>
+        // Cognito
+        var params = {
+            AccountId: "864974540803",
+            RoleArn: "arn:aws:iam::864974540803:role/Cognito_CICtechUnauth_DefaultRole",
+            IdentityPoolId: "us-east-1:da705614-f984-48d2-9772-f40648923eae"
+        };
+        AWS.config.region = "us-east-1";
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials(params);
+        AWS.config.credentials.get( function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("Successfully authorized. ID:" + AWS.config.credentials.identityId);
+            }
+        });
+        // S3 Upload
+        function upload () {
+            console.log("Now uploading...");
+            var s3 = new AWS.S3({params:{Bucket:"cic-tech-images"}}); // Please modify
+            var file = document.getElementById("fileToUpload").files[0];
+            if (file) {
+                s3.putObject({
+                    Key:file.name, ContentType:file.type, Body:file, ACL:"public-read"
+                }, function (err, data) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("Successfully uploaded.");
+                    }
+                });
+            }
+        }
+        //DynamoDB Query
+        function download () {
+            console.log("Now loading...");
+            var dynamodb = new AWS.DynamoDB({params: {TableName: "ImageUploader"}});
+            dynamodb.query({
+                AttributesToGet : ['original','thumbnail'],
+                KeyConditions: {
+                    id : {
+                        AttributeValueList: [ {S: "ImageUploader", }],
+                        "ComparisonOperator": "EQ"
+                    }
+                },
+                ScanIndexForward: false
+            }, function(err, data) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    var wrapper = document.getElementById('imageList');
+                    wrapper.innerHTML = '';
+                    data.Items.map(function(item) {
+                        var a = document.createElement('a');
+                        a.href = "http://" + item.original.S;
+                        var img = document.createElement('img');
+                        img.src = "http://" + item.thumbnail.S;
+                        a.appendChild(img);
+                        return a;
+                    }).forEach(function(a) {
+                        wrapper.appendChild(a);
+                        wrapper.appendChild(document.createElement('br'));
+                    });
+                    console.log("Successfully loaded.");
+                }
+            });
+        }
+    </script>
+    <input type="file" name="fileToUpload" id="fileToUpload">
+    <input type="submit" value="upload" onclick="upload()">
+    <input type="submit" value="download" onclick="download()">
+    <hr><div id="imageList"></div>
+
+
+    <div class="section secondary-section " >
             <div class="container">
                 <div class=" title">
                     <h1>Innovation News</h1>
