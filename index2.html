@@ -80,17 +80,11 @@
     function download () {
         AWS.config.region = "ap-northeast-1";
         console.log("Now loading...");
-        var dynamodb = new AWS.DynamoDB({params: {TableName: "cic-tech-info"}});
-        dynamodb.query({
-            AttributesToGet : ['category','s3_url'],
-            KeyConditions: {
-                category : {
-                    AttributeValueList: [ {S: "cloud", }],
-                    "ComparisonOperator": "EQ"
-                }
-            },
-            ScanIndexForward: false
-        }, function(err, data) {
+        var dynamodb = new AWS.DynamoDB();
+        dynamodb.getItem({
+            TableName :"cic-tech-info"
+                  ,Key:{category:"cloud"},
+           }, function(err, data) {
             if (err) {
                 console.log(err);
             } else {
