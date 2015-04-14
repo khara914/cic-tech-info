@@ -95,7 +95,12 @@
     }
 </script>
 
-<img id="tmp">
+<img id="tmp0">
+<img id="tmp1">
+<img id="tmp2">
+<img id="tmp3">
+<img id="tmp4">
+<img id="tmp5">
 <script>
     var dynamodb = new AWS.DynamoDB();
     dynamodb.scan({TableName: "cic-tech-info",
@@ -114,13 +119,34 @@
                 console.log(list.s3_url);
                 console.log(list.thumbnail_url.S);
             }
-            var img = document.getElementById("tmp");
-            img.src = list.thumbnail_url.S;
-            img.border = 1;
-            img.width = 100;
-            img.height = 100;
-            img.hspace = 10;
-            img.vspace = 10;
+
+            for(var i=0; i<3; i++){
+                var list = data.Items[i];
+                var tmp = "tmp"+i;
+                var img = document.getElementById(tmp);
+                img.src = list.rangekey.S;
+                img.border = 1;
+                img.width = 400;
+                img.height = 400;
+                img.hspace = 10;
+                img.vspace = 10;
+            }
+            /**          for (var list in data.Items) {
+                list = data.Items[list];
+                console.log(list.category);
+                console.log(list.rangekey);
+                console.log(list.s3_url);
+                console.log(list.thumbnail_url.S);
+
+                var img = document.getElementById("tmp");
+                img.src = list.thumbnail_url.S;
+                img.border = 1;
+                img.width = 400;
+                img.height = 400;
+                img.hspace = 10;
+                img.vspace = 10;
+            }
+             **/
         }
     });
 </script>
