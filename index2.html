@@ -41,7 +41,6 @@
     </div>
 </div>
 
-
 <script>
     // Cognito
     var params = {
@@ -58,33 +57,22 @@
             console.log("Successfully authorized. ID:" + AWS.config.credentials.identityId);
         }
     });
-    // S3 Upload
-    function upload () {
-        console.log("Now uploading...");
-        var s3 = new AWS.S3({params:{Bucket:"cic-tech-images"}}); // Please modify
-        var file = document.getElementById("fileToUpload").files[0];
-        if (file) {
-            s3.putObject({
-                Key:file.name, ContentType:file.type, Body:file, ACL:"public-read"
-            }, function (err, data) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log("Successfully uploaded.");
-                }
-            });
-        }
-    }
-
+    </script>
+    <script>
     //DynamoDB Query
     function download () {
-        AWS.config.region = "ap-northeast-1";
         console.log("Now loading...");
-        var dynamodb = new AWS.DynamoDB();
-        dynamodb.getItem({
-            TableName :"cic-tech-info"
-                  ,Key:{category:"cloud"},
-           }, function(err, data) {
+        var dynamodb = new AWS.DynamoDB({params: {TableName: "cic-tech-info"}, region:"us-east-1" });
+        dynamodb.query({
+            AttributesToGet : ['category','thumbnail_url'],
+            KeyConditions: {
+                category : {
+                    AttributeValueList: [ {S: "cloud"}],
+                    "ComparisonOperator": "EQ"
+                }
+            },
+            ScanIndexForward: false
+        }, function(err, data) {
             if (err) {
                 console.log(err);
             } else {
@@ -92,9 +80,9 @@
                 wrapper.innerHTML = '';
                 data.Items.map(function(item) {
                     var a = document.createElement('a');
-                    a.href =  item.s3_url.S;
+                    a.href =  item.thumbnail_url.S;
                     var img = document.createElement('img');
-                    img.src =  item.s3_url.S;
+                    img.src =  item.thumbnail_url.S;
                     a.appendChild(img);
                     return a;
                 }).forEach(function(a) {
@@ -106,6 +94,44 @@
         });
     }
 </script>
+
+
+<script>
+    //DynamoDB Query
+        console.log("Now loading...");
+        var dynamodb = new AWS.DynamoDB({params: {TableName: "cic-tech-info"}, region:"us-east-1" });
+        dynamodb.query({
+            AttributesToGet : ['category','thumbnail_url'],
+            KeyConditions: {
+                category : {
+                    AttributeValueList: [ {S: "cloud"}],
+                    "ComparisonOperator": "EQ"
+                }
+            },
+            ScanIndexForward: false
+        }, function(err, data) {
+            if (err) {
+                console.log(err);
+            } else {
+                var wrapper = document.getElementById('imageList');
+                wrapper.innerHTML = '';
+                data.Items.map(function(item) {
+                    var a = document.createElement('a');
+                    a.href =  item.thumbnail_url.S;
+                    var img = document.createElement('img');
+                    img.src =  item.thumbnail_url.S;
+                    a.appendChild(img);
+                    return a;
+                }).forEach(function(a) {
+                    wrapper.appendChild(a);
+                    wrapper.appendChild(document.createElement('br'));
+                });
+                console.log("Successfully loaded.");
+            }
+        });
+</script>
+
+
 <input type="file" name="fileToUpload" id="fileToUpload">
 <input type="submit" value="upload" onclick="upload()">
 <input type="submit" value="download" onclick="download()">
