@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="ja">
+<html lang="ja" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset=utf-8>
@@ -35,70 +35,14 @@
 <div class="navbar">
     <div class="container">
         <a href="#" class="brand">
-            <img src="images/logo_white.png" width="150" height="50" alt="Logo" />
+            <img src="./images/logo_white.png" width="150" height="50" alt="Logo" />
             <!-- This is corporate logo -->
         </a>
     </div>
 </div>
 
-<script>
-    // Cognito
-    var params = {
-        AccountId: "864974540803",
-        RoleArn: "arn:aws:iam::864974540803:role/Cognito_CICtechUnauth_DefaultRole",
-        IdentityPoolId: "us-east-1:da705614-f984-48d2-9772-f40648923eae"
-    };
-    AWS.config.region = "us-east-1";
-    AWS.config.credentials = new AWS.CognitoIdentityCredentials(params);
-    AWS.config.credentials.get( function (err) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Successfully authorized. ID:" + AWS.config.credentials.identityId);
-        }
-    });
-</script>
-
-<script>
-    var dynamodb = new AWS.DynamoDB();
-    dynamodb.scan({TableName: "cic-tech-info",
-        Select:"ALL_ATTRIBUTES",
-        ScanFilter:{
-            "thumbnail_url":{"AttributeValueList":[{S:"none"}],"ComparisonOperator":"NE"}
-        }
-    }, function (err, data) {
-        if (err) console.log(err);
-        else {
-            for(var i=0; i<9; i++){
-                var list = data.Items[i];
-                var tmp = "tmp"+i;
-                var img = document.getElementById(tmp);
-                img.src = list.thumbnail_url.S;
-                img.border = 1;
-                img.width = 240;
-                img.height = 240;
-                img.hspace = 10;
-                img.vspace = 10;
-            }
-            for(var j=0; j<9; j++){
-                var list = data.Items[j];
-                var temp = "temp"+j;
-                var img = document.getElementById(temp);
-                img.src = list.thumbnail_url.S;
-                img.border = 1;
-                img.width = 240;
-                img.height = 240;
-                img.hspace = 10;
-                img.vspace = 10;
-            }
-            for(var k=0; k<9; k++) {
-                var list = data.Items[k];
-                var title = "title" + k;
-                document.getElementById(title).textContent = list.title.S;
-            }
-        }
-    });
-</script>
+<script src="./js/cognito.js"></script>
+<script src="./js/dynamodb.js"></script>
 
 <div class="section secondary-section " >
     <div class="container">
@@ -129,22 +73,20 @@
                 <div class="span6">
                     <div class="project-description">
                         <div class="project-title clearfix">
-                            <h3>Webste for Some Client</h3>
+                            <h3 id="pagetitle0"></h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                         </div>
                         <div class="project-info">
                             <div>
-                                <span>Client</span>Some Client Name</div>
+                                <span>media</span><p id="media0"></p></div>
                             <div>
-                                <span>Date</span>July 2013</div>
+                                <span>Date</span><p id="time0"></p></div>
                             <div>
-                                <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                            <div>
-                                <span>Link</span>http://examplecomp.com</div>
+                                <span>Link</span><a href id="link0" target="_blank"></a></div>
                         </div>
-                        <p>Believe in yourself! Have faith in your abilities! Without a humble but reasonable confidence in your own powers you cannot be successful or happy.</p>
+                        <p id="summary0"></p>
                     </div>
                 </div>
             </div>
@@ -157,22 +99,20 @@
                 <div class="span6">
                     <div class="project-description">
                         <div class="project-title clearfix">
-                            <h3>Webste for Some Client</h3>
+                            <h3 id="pagetitle1"></h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                         </div>
                         <div class="project-info">
                             <div>
-                                <span>Client</span>Some Client Name</div>
+                                <span>media</span><p id="media1"></p></div>
                             <div>
-                                <span>Date</span>July 2013</div>
+                                <span>Date</span><p id="time1"></p></div>
                             <div>
-                                <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                            <div>
-                                <span>Link</span>http://examplecomp.com</div>
+                                <span>Link</span><a href id="link1" target="_blank"></a></div>
                         </div>
-                        <p>Life is a song - sing it. Life is a game - play it. Life is a challenge - meet it. Life is a dream - realize it. Life is a sacrifice - offer it. Life is love - enjoy it.</p>
+                        <p id="summary1"></p>
                     </div>
                 </div>
             </div>
@@ -185,22 +125,20 @@
                 <div class="span6">
                     <div class="project-description">
                         <div class="project-title clearfix">
-                            <h3>Webste for Some Client</h3>
+                            <h3 id="pagetitle2"></h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                         </div>
                         <div class="project-info">
                             <div>
-                                <span>Client</span>Some Client Name</div>
+                                <span>media</span><p id="media2"></p></div>
                             <div>
-                                <span>Date</span>July 2013</div>
+                                <span>Date</span><p id="time2"></p></div>
                             <div>
-                                <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                            <div>
-                                <span>Link</span>http://examplecomp.com</div>
+                                <span>Link</span><a href id="link2" target="_blank"></a></div>
                         </div>
-                        <p>How far you go in life depends on your being tender with the young, compassionate with the aged, sympathetic with the striving and tolerant of the weak and strong. Because someday in your life you will have been all of these.</p>
+                        <p id="summary2"></p>
                     </div>
                 </div>
             </div>
@@ -213,22 +151,20 @@
                 <div class="span6">
                     <div class="project-description">
                         <div class="project-title clearfix">
-                            <h3>Project for Some Client</h3>
+                            <h3 id="pagetitle3"></h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                         </div>
                         <div class="project-info">
                             <div>
-                                <span>Client</span>Some Client Name</div>
+                                <span>media</span><p id="media3"></p></div>
                             <div>
-                                <span>Date</span>July 2013</div>
+                                <span>Date</span><p id="time3"></p></div>
                             <div>
-                                <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                            <div>
-                                <span>Link</span>http://examplecomp.com</div>
+                                <span>Link</span><a href id="link3" target="_blank"></a></div>
                         </div>
-                        <p>Life's but a walking shadow, a poor player, that struts and frets his hour upon the stage, and then is heard no more; it is a tale told by an idiot, full of sound and fury, signifying nothing.</p>
+                        <p id="summary3"></p>
                     </div>
                 </div>
             </div>
@@ -241,22 +177,20 @@
                 <div class="span6">
                     <div class="project-description">
                         <div class="project-title clearfix">
-                            <h3>Webste for Some Client</h3>
+                            <h3 id="pagetitle4"></h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                         </div>
                         <div class="project-info">
                             <div>
-                                <span>Client</span>Some Client Name</div>
+                                <span>media</span><p id="media4"></p></div>
                             <div>
-                                <span>Date</span>July 2013</div>
+                                <span>Date</span><p id="time4"></p></div>
                             <div>
-                                <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                            <div>
-                                <span>Link</span>http://examplecomp.com</div>
+                                <span>Link</span><a href id="link4" target="_blank"></a></div>
                         </div>
-                        <p>We need to give each other the space to grow, to be ourselves, to exercise our diversity. We need to give each other space so that we may both give and receive such beautiful things as ideas, openness, dignity, joy, healing, and inclusion.</p>
+                        <p id="summary4"></p>
                     </div>
                 </div>
             </div>
@@ -269,22 +203,20 @@
                 <div class="span6">
                     <div class="project-description">
                         <div class="project-title clearfix">
-                            <h3>Webste for Some Client</h3>
+                            <h3 id="pagetitle5"></h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                         </div>
                         <div class="project-info">
                             <div>
-                                <span>Client</span>Some Client Name</div>
+                                <span>media</span><p id="media5"></p></div>
                             <div>
-                                <span>Date</span>July 2013</div>
+                                <span>Date</span><p id="time5"></p></div>
                             <div>
-                                <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                            <div>
-                                <span>Link</span>http://examplecomp.com</div>
+                                <span>Link</span><a href id="link5" target="_blank"></a></div>
                         </div>
-                        <p>I went to the woods because I wished to live deliberately, to front only the essential facts of life, and see if I could not learn what it had to teach, and not, when I came to die, discover that I had not lived.</p>
+                        <p id="summary5"></p>
                     </div>
                 </div>
             </div>
@@ -297,22 +229,20 @@
                 <div class="span6">
                     <div class="project-description">
                         <div class="project-title clearfix">
-                            <h3>Webste for Some Client</h3>
+                            <h3 id="pagetitle6"></h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                         </div>
                         <div class="project-info">
                             <div>
-                                <span>Client</span>Some Client Name</div>
+                                <span>media</span><p id="media6"></p></div>
                             <div>
-                                <span>Date</span>July 2013</div>
+                                <span>Date</span><p id="time6"></p></div>
                             <div>
-                                <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                            <div>
-                                <span>Link</span>http://examplecomp.com</div>
+                                <span>Link</span><a href id="link6" target="_blank"></a></div>
                         </div>
-                        <p>Always continue the climb. It is possible for you to do whatever you choose, if you first get to know who you are and are willing to work with a power that is greater than ourselves to do it.</p>
+                        <p id="summary6"></p>
                     </div>
                 </div>
             </div>
@@ -325,22 +255,20 @@
                 <div class="span6">
                     <div class="project-description">
                         <div class="project-title clearfix">
-                            <h3>Webste for Some Client</h3>
+                            <h3 id="pagetitle7"></h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                         </div>
                         <div class="project-info">
                             <div>
-                                <span>Client</span>Some Client Name</div>
+                                <span>media</span><p id="media7"></p></div>
                             <div>
-                                <span>Date</span>July 2013</div>
+                                <span>Date</span><p id="time7"></p></div>
                             <div>
-                                <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                            <div>
-                                <span>Link</span>http://examplecomp.com</div>
+                                <span>Link</span><a href id="link7" target="_blank"></a></div>
                         </div>
-                        <p>What if you gave someone a gift, and they neglected to thank you for it - would you be likely to give them another? Life is the same way. In order to attract more of the blessings that life has to offer, you must truly appreciate what you already have.</p>
+                        <p id="summary7"></p>
                     </div>
                 </div>
             </div>
@@ -353,22 +281,20 @@
                 <div class="span6">
                     <div class="project-description">
                         <div class="project-title clearfix">
-                            <h3>Webste for Some Client</h3>
+                            <h3 id="pagetitle8"></h3>
                                     <span class="show_hide close">
                                         <i class="icon-cancel"></i>
                                     </span>
                         </div>
                         <div class="project-info">
                             <div>
-                                <span>Client</span>Some Client Name</div>
+                                <span>media</span><p id="media8"></p></div>
                             <div>
-                                <span>Date</span>July 2013</div>
+                                <span>Date</span><p id="time8"></p></div>
                             <div>
-                                <span>Skills</span>HTML5, CSS3, JavaScript</div>
-                            <div>
-                                <span>Link</span>http://examplecomp.com</div>
+                                <span>Link</span><a href id="link8" target="_blank"></a></div>
                         </div>
-                        <p>I learned that we can do anything, but we can't do everything... at least not at the same time. So think of your priorities not in terms of what activities you do, but when you do them. Timing is everything.</p>
+                        <p id="summary8"></p>
                     </div>
                 </div>
             </div>
